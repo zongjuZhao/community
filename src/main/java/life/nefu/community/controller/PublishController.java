@@ -1,7 +1,6 @@
 package life.nefu.community.controller;
 
 import life.nefu.community.mapper.QuestionMapper;
-import life.nefu.community.mapper.UserMapper;
 import life.nefu.community.model.Question;
 import life.nefu.community.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -22,9 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 public class PublishController {
     @Autowired
     private QuestionMapper questionMapper;
-
-    @Autowired
-    private UserMapper userMapper;
 
     @GetMapping("/publish")
     public String publish() {
@@ -58,25 +53,7 @@ public class PublishController {
             return "publish";
         }
 
-        //查询逻辑
-        User user = null;
-        //新增：判空：用于删除cookie(用户退出登录),不报空指针异常
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null && cookies.length != 0)
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("token")) {
-                    String token = cookie.getValue();
-                    //      希望传过去token,从数据库中获取user对象
-                    user = userMapper.findByToken(token);
-                    if (user != null) {
-                        //页面展示
-                        request.getSession().setAttribute("user", user);
-                    }
-//              拿到token,break
-                    break;
-                }
-            }
-
+        User user = (User) request.getSession().getAttribute("user");
         //如果用户未登录，不能发布问题,跳转到publish页面
         if (user == null) {
             model.addAttribute("error", "用户未登录");

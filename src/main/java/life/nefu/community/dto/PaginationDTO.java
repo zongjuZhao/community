@@ -24,23 +24,9 @@ public class PaginationDTO {
 
     private Integer totalPage;
 
-    public void setPagination(Integer totalCount, Integer page, Integer size) {
+    public void setPagination(Integer totalPage, Integer page) {
 
-        if (totalCount % size == 0) {
-            totalPage = totalCount / size;
-        } else {
-            totalPage = totalCount / size + 1;
-        }
-
-//      目的：当前页码高亮显示；给属性赋值
-        if(page<1){
-            page=1;
-        }
-
-        if(page>totalPage){
-            page=totalPage;
-        }
-
+        this.totalPage=totalPage;
         this.page=page;
 
         pages.add(page);
@@ -77,7 +63,7 @@ public class PaginationDTO {
         }
 
         //是否展示最后一页
-        if (pages.contains(totalCount)) {
+        if (pages.contains(totalPage)) {
             showEndPage = false;
         } else {
             showEndPage = true;

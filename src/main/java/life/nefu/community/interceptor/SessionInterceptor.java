@@ -2,6 +2,7 @@ package life.nefu.community.interceptor;
 
 import life.nefu.community.mapper.UserMapper;
 import life.nefu.community.model.User;
+import life.nefu.community.model.UserExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -10,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * @author juran
@@ -31,10 +33,13 @@ public class SessionInterceptor implements HandlerInterceptor {
                 if (cookie.getName().equals("token")) {
                     String token = cookie.getValue();
                     //      希望传过去token,从数据库中获取user对象
-                    User user = userMapper.findByToken(token);
-                    if (user != null) {
+//                    User user = userMapper.findByToken(token);
+                    UserExample userExample = new UserExample();
+                    userExample.createCriteria().andTokenEqualTo(token);
+                    List<User> users = userMapper.selectByExample(userExample);
+                    if (users.size() != 0) {
                         //页面展示
-                        request.getSession().setAttribute("user", user);
+                        request.getSession().setAttribute("user", users.get(0));
                     }
 //              拿到token,break
                     break;

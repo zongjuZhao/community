@@ -57,7 +57,7 @@ public class AuthorizeController {
 //   4.返回user信息
         GithubUser githubUser = githubProvider.getUser(accessToken);
         System.out.println(githubUser.getName() );
-        if(githubUser!=null){
+        if(githubUser!=null && githubUser.getId()!=null){
             User user = new User();
 //          不用JSESSIONID，自己生成token
             String token = UUID.randomUUID().toString();
@@ -66,6 +66,7 @@ public class AuthorizeController {
             user.setAccountId(String.valueOf(githubUser.getId()));
 
             user.setAvatarUrl(githubUser.getAvatar_url());
+
             userService.createOrUpdate(user);
 //           被userService替换： userMapper.insert(user);
             //5.登陆成功，写cookie和session

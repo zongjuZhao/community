@@ -45,14 +45,14 @@ public class PaginationDTO {
         if (page == 1) {
             showPrevious = false;
         } else {
-            showNext = true;
+            showPrevious = true;
         }
 
         //是否展示下一页
         if (page == totalPage) {
             showNext = false;
         } else {
-            showPrevious = true;
+            showNext = true;
         }
 
         //是否展示第一页

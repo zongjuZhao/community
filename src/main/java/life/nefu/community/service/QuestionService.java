@@ -48,14 +48,14 @@ public class QuestionService {
             page = totalPage;
         }
 
-        paginationDTO.setPagination(totalCount, page);
+        paginationDTO.setPagination(totalPage, page);
         //size*(page-1)
         Integer offset = size * (page - 1);
         List<Question> questions = questionMapper.list(offset, size);
         ArrayList<QuestionDTO> questionDTOList = new ArrayList<>();
 
         for (Question question : questions) {
-            User user = userMapper.finById(question.getCreator());
+            User user = userMapper.findById(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
 //          优化：questionDTO.setXxx()
             BeanUtils.copyProperties(question, questionDTO);
@@ -89,15 +89,15 @@ public class QuestionService {
             page = totalPage;
         }
 
-        paginationDTO.setPagination(totalCount, page);
+        paginationDTO.setPagination(totalPage, page);
 
         //size*(page-1)
         Integer offset = size * (page - 1);
         List<Question> questions = questionMapper.listByUserId(userId, offset, size);
-        ArrayList<QuestionDTO> questionDTOList = new ArrayList<>();
+        List<QuestionDTO> questionDTOList = new ArrayList<>();
 
         for (Question question : questions) {
-            User user = userMapper.finById(question.getCreator());
+            User user = userMapper.findById(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
 //          优化：questionDTO.setXxx()
             BeanUtils.copyProperties(question, questionDTO);
@@ -109,5 +109,18 @@ public class QuestionService {
 
         return paginationDTO;
 
+    }
+
+    public QuestionDTO getById(Integer id) {
+
+        Question question = questionMapper.getById(id);
+        QuestionDTO questionDTO = new QuestionDTO();
+        BeanUtils.copyProperties(question, questionDTO);
+
+//      错误：question.user.avatarUrl，Property or field 'avatarUrl' cannot be found on null
+        User user = userMapper.findById(question.getCreator());
+        questionDTO.setUser(user);
+
+        return questionDTO;
     }
 }

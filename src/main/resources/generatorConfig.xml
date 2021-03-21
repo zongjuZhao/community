@@ -7,6 +7,8 @@
 
     <context id="DB2Tables" targetRuntime="MyBatis3">
 
+        <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"></plugin>
+
         <!--        解决每次都会生成的重复的xml 代码文件 -->
         <!--覆盖生成XML文件-->
         <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin" />
@@ -37,6 +39,7 @@
         </javaClientGenerator>
 
         <table tableName="user" domainObjectName="User" ></table>
+        <table tableName="question" domainObjectName="Question"></table>
 
     </context>
 </generatorConfiguration>

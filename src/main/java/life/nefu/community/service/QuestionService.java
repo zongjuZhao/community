@@ -2,6 +2,8 @@ package life.nefu.community.service;
 
 import life.nefu.community.dto.PaginationDTO;
 import life.nefu.community.dto.QuestionDTO;
+import life.nefu.community.exception.CustomizeErrorCode;
+import life.nefu.community.exception.CustomizeException;
 import life.nefu.community.mapper.QuestionMapper;
 import life.nefu.community.mapper.UserMapper;
 import life.nefu.community.model.Question;
@@ -125,6 +127,10 @@ public class QuestionService {
 //        Question question = questionMapper.getById(id);
         Question question = questionMapper.selectByPrimaryKey(id);
 
+        if (question==null){
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
+
         QuestionDTO questionDTO = new QuestionDTO();
         BeanUtils.copyProperties(question, questionDTO);
 
@@ -152,7 +158,10 @@ public class QuestionService {
 
             QuestionExample example = new QuestionExample();
             example.createCriteria().andIdEqualTo(question.getId());
-            questionMapper.updateByExampleSelective(updateQuestion, example);
+            int updated = questionMapper.updateByExampleSelective(updateQuestion, example);
+            if (updated!=1){
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
 
         }
     }
